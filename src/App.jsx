@@ -10,7 +10,7 @@ import {
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 
-const API_KEY = "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";
+const API_KEY = "";
 
 const systemMessage = {
   role: "system",
@@ -118,6 +118,14 @@ function App() {
           </ChatContainer>
         </MainContainer>
       </div>
+      <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC5iM8-FSp7-NIXI_i-d1pw-Om0e1qkhAE&q=pharmacies+in+melbourne" 
+      width="600" 
+      height="450" 
+      allowfullscreen="" 
+      loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade">
+
+      </iframe>
     </div>
   );
 }
