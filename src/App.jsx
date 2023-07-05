@@ -12,10 +12,16 @@ import {
 
 const API_KEY = "";
 
-const systemMessage = {
+const systemMessageRecommendation = {
   role: "system",
   content:
-    "You are a doctor. Recommend users what specific type of doctor they should see based on the symptoms they tell you. Keep your response relatively short.",
+    "You are a doctor. Recommend users what specific type of doctor they should see based on the symptoms they tell you. Keep your response relatively short. Please ask follow questions to properly diagnose the user's symtptoms. Also suggest if the user even needs to go to the doctor, if deemed necessary. ",
+};
+
+const systemMessageKeywords = {
+  role: "system",
+  content:
+    "In 4 to 6 words, say what specific type of doctor, including general practitioner, the user should visit based on the symptoms they tell you. Please don't use any filler words. Don't recommend specialists if a general practioner is suffice to address the symptoms given",
 };
 
 function App() {
@@ -26,6 +32,7 @@ function App() {
       sender: "ChatGPT",
     },
   ]);
+  const [medicalService, setMedicalService] = useState("")
   const [isTyping, setIsTyping] = useState(false);
 
   const handleSend = async (message) => {
@@ -67,7 +74,7 @@ function App() {
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
-        systemMessage, // The system message DEFINES the logic of our chatGPT
+        systemMessageRecommendation, // The system message DEFINES the logic of our chatGPT
         ...apiMessages, // The messages from our chat with ChatGPT
       ],
     };
@@ -84,7 +91,6 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        console.log(data);
         setMessages([
           ...chatMessages,
           {
@@ -93,6 +99,33 @@ function App() {
           },
         ]);
         setIsTyping(false);
+      });
+
+    const apiRequestBodyKeywords = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        systemMessageKeywords, // The system message DEFINES the logic of our chatGPT
+        ...apiMessages, // The messages from our chat with ChatGPT
+      ],
+    };
+
+    console.log(systemMessageKeywords)
+
+    await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(apiRequestBodyKeywords),
+    })
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        let parsedContent = data.choices[0].message.content.replace(/\s+/g, '+');
+        setMedicalService(parsedContent)
+        console.log(parsedContent);
       });
   }
 
@@ -110,7 +143,6 @@ function App() {
               }
             >
               {messages.map((message, i) => {
-                console.log(message);
                 return <Message key={i} model={message} />;
               })}
             </MessageList>
@@ -118,13 +150,13 @@ function App() {
           </ChatContainer>
         </MainContainer>
       </div>
-      <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC5iM8-FSp7-NIXI_i-d1pw-Om0e1qkhAE&q=pharmacies+in+melbourne" 
+      <iframe 
+      src={`https://www.google.com/maps/embed/v1/search?key=&q=${medicalService}+in+melbourne`}
       width="600" 
       height="450" 
-      allowfullscreen="" 
+      allowFullScreen="" 
       loading="lazy" 
-      referrerpolicy="no-referrer-when-downgrade">
-
+      referrerPolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
   );
