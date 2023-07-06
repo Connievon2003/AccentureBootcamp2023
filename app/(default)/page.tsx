@@ -17,13 +17,13 @@ const API_KEY = "";
 const systemMessageRecommendation = {
   role: "system",
   content:
-    "You are a doctor. Recommend users what specific type of doctor they should see based on the symptoms they tell you. Keep your response relatively short. Please ask follow questions to properly diagnose the user's symtptoms. Also suggest if the user even needs to go to the doctor, if deemed necessary. ",
+    "You are a doctor. Recommend users what specific type of doctor they should see based on the symptoms they tell you. Keep your response relatively short. If you would recommend a specialist, please mention they must get a referral from a GP",
 };
 
 const systemMessageKeywords = {
   role: "system",
   content:
-    "In 4 to 6 words, say what specific type of doctor, including general practitioner, the user should visit based on the symptoms they tell you. Please don't use any filler words. Don't recommend specialists if a general practioner is suffice to address the symptoms given",
+    "In 5 to 8 words, say what specific type of doctor, including general practitioner, the user should visit based on the symptoms they tell you. Please don't use any filler words. Don't recommend specialists if a general practioner is suffice to address the symptoms given. If the user provides a location, please include that in your response in melbourne",
 };
 
 export default function Home() {
@@ -36,9 +36,24 @@ export default function Home() {
       sender: "ChatGPT",
     },
   ]);
-  const [medicalService, setMedicalService] = useState<any>("");
+  const [medicalService, setMedicalService] = useState<any>(" ");
   const [isTyping, setIsTyping] = useState<any>(false);
   const [searched, setSearched] = useState<boolean>(false);
+  const [currentLocation, setCurrentlocation] = useState<String>("-37.814438, 144.955820");
+
+  const successCallback = (position: any) => {
+    console.log(position);
+    let coords: String =
+      position.coords.latitude.toString() + ", " + position.coords.longitude.toString();
+      console.log(coords);
+      setCurrentlocation(coords);
+  };
+
+  const errorCallback = (error: any) => {
+    console.log(error);
+  };
+
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
   const handleSend = async (message: any) => {
     const newMessage = {
@@ -157,16 +172,17 @@ export default function Home() {
                   EZhealth
                 </h1>
                 <p
-                  className="text-xl text-gray-400 mb-8"
+                  className="text-xxl text-gray-400 mb-8"
                   data-aos="fade-up"
                   data-aos-delay="200"
+                  style={{fontSize: "x-large"}}
                 >
-                  Medical guidance at your fingertips.. or whatever
+                  Empowering your Healthcare Journey
                 </p>
-                <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
+                <div className="max-w-x s mx-auto sm:max-w-none sm:flex sm:justify-center">
                   <div data-aos="fade-up" data-aos-delay="400">
                     <button
-                      className="btn text-white bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0"
+                      className="btn text-white bg-orange-600 hover:bg-gray-800 w-full mb-4 sm:w-auto sm:mb-0"
                       onClick={goToChatBot}
                     >
                       Seek Medical Guidance
@@ -174,7 +190,7 @@ export default function Home() {
                   </div>
                   <div data-aos="fade-up" data-aos-delay="600">
                     <button
-                      className="btn text-white bg-gray-700 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
+                      className="btn text-white bg-blue-600 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
                       onClick={goToMaps}
                     >
                       Find a Health Professional
@@ -207,12 +223,17 @@ export default function Home() {
             </ChatContainer>
           </MainContainer>
         </div>
-        {searched && <h1 style={{textAlign: "center"}}>Consult the map below to see what health services are appropriate for you</h1>}
+        {searched && (
+          <h1 style={{ textAlign: "center" }}>
+            Consult the map below to see what health services are appropriate
+            for you
+          </h1>
+        )}
         <div ref={mapsRef} className="map">
           <iframe
-            src={`https://www.google.com/maps/embed/v1/search?key=&q=${medicalService}+in+melbourne`}
-            width="600"
-            height="450"
+            src={`https://www.google.com/maps/embed/v1/search?key=&q=${medicalService}+in+melbourne+cbd`}
+            width="1215"
+            height="600"
             allowFullScreen={true}
             style={{ margin: "auto" }}
             loading="lazy"
