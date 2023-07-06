@@ -39,21 +39,6 @@ export default function Home() {
   const [medicalService, setMedicalService] = useState<any>(" ");
   const [isTyping, setIsTyping] = useState<any>(false);
   const [searched, setSearched] = useState<boolean>(false);
-  const [currentLocation, setCurrentlocation] = useState<String>("-37.814438, 144.955820");
-
-  const successCallback = (position: any) => {
-    console.log(position);
-    let coords: String =
-      position.coords.latitude.toString() + ", " + position.coords.longitude.toString();
-      console.log(coords);
-      setCurrentlocation(coords);
-  };
-
-  const errorCallback = (error: any) => {
-    console.log(error);
-  };
-
-  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
   const handleSend = async (message: any) => {
     const newMessage = {
@@ -168,14 +153,18 @@ export default function Home() {
             <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
               {/* Section header */}
               <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-                <h1 className="h1 mb-4" data-aos="fade-up">
+                <h1
+                  className="h1 mb-4"
+                  data-aos="fade-up"
+                  style={{ fontSize: "xxx-large", color: "black" }}
+                >
                   EZhealth
                 </h1>
                 <p
                   className="text-xxl text-gray-400 mb-8"
                   data-aos="fade-up"
                   data-aos-delay="200"
-                  style={{fontSize: "x-large"}}
+                  style={{ fontSize: "x-large", color: "black" }}
                 >
                   Empowering your Healthcare Journey
                 </p>
@@ -224,18 +213,17 @@ export default function Home() {
           </MainContainer>
         </div>
         {searched && (
-          <h1 style={{ textAlign: "center" }}>
+          <h1 style={{ textAlign: "center", color: "black" }}>
             Consult the map below to see what health services are appropriate
             for you
           </h1>
         )}
-        <div ref={mapsRef} className="map">
+        <div ref={mapsRef}>
           <iframe
+            className="map"
             src={`https://www.google.com/maps/embed/v1/search?key=&q=${medicalService}+in+melbourne+cbd`}
-            width="1215"
-            height="600"
+            height="500"
             allowFullScreen={true}
-            style={{ margin: "auto" }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
