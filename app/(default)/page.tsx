@@ -17,7 +17,7 @@ const API_KEY = "";
 const systemMessageRecommendation = {
   role: "system",
   content:
-    "You are a doctor. Recommend users what specific type of doctor they should see based on the symptoms they tell you. Keep your response relatively short. If you would recommend a specialist, please mention they must get a referral from a GP",
+    "You are a doctor. Recommend users what specific type of doctor they should see based on the symptoms they tell you. Keep your response relatively short. If you would recommend a specialist, please mention they must get a referral from a GP. Do not mention that you are an AI.",
 };
 
 const systemMessageKeywords = {
@@ -31,7 +31,7 @@ export default function Home() {
   const mapsRef = useRef<null | HTMLDivElement>(null);
   const [messages, setMessages] = useState<any>([
     {
-      message: "Hello, I'm EZhealth! What symptoms are you showing?",
+      message: "Hello, I'm Care Connect! What symptoms are you showing?",
       sentTime: "just now",
       sender: "ChatGPT",
     },
@@ -158,7 +158,7 @@ export default function Home() {
                   data-aos="fade-up"
                   style={{ fontSize: "xxx-large", color: "black" }}
                 >
-                  EZhealth
+                  Care Connect
                 </h1>
                 <p
                   className="text-xxl text-gray-400 mb-8"
@@ -197,7 +197,7 @@ export default function Home() {
                 scrollBehavior="smooth"
                 typingIndicator={
                   isTyping ? (
-                    <TypingIndicator content="EZhealth is typing" />
+                    <TypingIndicator content="Care Connect is typing" />
                   ) : null
                 }
               >
